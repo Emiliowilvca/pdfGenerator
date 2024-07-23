@@ -396,3 +396,24 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+# Archivos de salida de compilación
+/dist/
+/node_modules/
+*.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.swp
+
+# Archivos de configuración del IDE
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.suo
+*.ncb
