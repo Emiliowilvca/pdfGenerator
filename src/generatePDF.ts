@@ -82,7 +82,7 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	// Configurar color y grosor de línea
 	doc.setDrawColor(0, 0, 0);
 	doc.setFillColor(255, 255, 255);
-	doc.setLineWidth(0.3);
+	doc.setLineWidth(0.2);
 
 	// Rectángulo a la izquierda (x, y, width, height, cornerX, cornerY)
 	doc.roundedRect(margin, margin, rectWidth, pageHeight - 2 * margin, 2, 2);
@@ -90,8 +90,11 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	// Rectángulo a la derecha
 	doc.roundedRect(lineX + rectMargin, margin, rectWidth, pageHeight - 2 * margin, 2, 2);
 
-	// (x1, y1, x2, y2)
+	//vertical line
+	doc.setLineWidth(0.1);
+	doc.setLineDash([0.5, 0.3], 0);
 	doc.line(lineX, 0, lineX, pageHeight);
+	doc.setLineDash([]);
 
 	doc.setFont(_fontFamily);
 	doc.setFontSize(_fontLarge);
@@ -173,6 +176,15 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	doc.setFontSize(_fontSmall);
 	doc.text(`Nro Registro: ${saleReturn.saleReturnId}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
 	doc.text(`Nro Registro: ${saleReturn.saleReturnId}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+
+	console.log(`xPosA:${xPosA}`);
+	console.log(`xPosB:${xPosB}`);
+	console.log(`rectWidth:${pageWidth - margin - rectMargin}`);
+
+	doc.setLineWidth(0.2);
+	doc.line(xPosA, yPos, lineX - margin, yPos);
+	doc.line(xPosB, yPos, pageWidth - margin, yPos);
+	yPos += _lineHsmall;
 
 	const pdfDataUrl = doc.output("datauristring");
 
