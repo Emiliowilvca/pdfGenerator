@@ -11,7 +11,7 @@ interface SaleReturnModel {
 	timbradoNumber: string;
 	timbradoDate: string;
 	invoiceNumber: string;
-	internalControl: string;
+	saleReturnId: string;
 }
 
 const saleReturnModel: SaleReturnModel = {
@@ -27,7 +27,7 @@ const saleReturnModel: SaleReturnModel = {
 	timbradoNumber: "1234567890",
 	timbradoDate: "01/01/2022",
 	invoiceNumber: "001-001-0701047",
-	internalControl: "1234567",
+	saleReturnId: "1234567",
 };
 
 function onGeneratePdfButtonClick(event: MouseEvent): void {
@@ -76,7 +76,7 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	let yPos = 10;
 	const _logoWith = 20;
 
-	const rucLeftSpace = 80;
+	const rucLeftSpace = 97;
 	let ryPos = yPos;
 
 	// Configurar color y grosor de línea
@@ -131,7 +131,7 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	yPos += _lineHsmall;
 
 	//companyActivity
-	const activity = saleReturn.companyActivity.substring(0, 50);
+	const activity = saleReturn.companyActivity.substring(0, 70);
 	doc.text(activity, xPosA + _logoWith, yPos);
 	doc.text(activity, xPosB + _logoWith, yPos);
 	yPos += _lineHsmall;
@@ -139,25 +139,41 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	//RUC
 	doc.setFont(_fontFamily, _fontBold);
 	doc.setFontSize(_fontSmall);
-	doc.text(`RUC: ${saleReturn.companyRuc}`, xPosA + _logoWith + rucLeftSpace, ryPos);
-	doc.text(`RUC: ${saleReturn.companyRuc}`, xPosB + _logoWith + rucLeftSpace, ryPos);
-
+	doc.text(`RUC: ${saleReturn.companyRuc}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`RUC: ${saleReturn.companyRuc}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.setFont(_fontFamily, _fontNormal);
 	ryPos += _lineHsmall;
-	//timbrado
-	doc.text(`Inicio de Vigencia: ${saleReturn.timbradoDate}`, xPosA + _logoWith + rucLeftSpace, ryPos);
-	doc.text(`Inicio de Vigencia: ${saleReturn.timbradoDate}`, xPosB + _logoWith + rucLeftSpace, ryPos);
 
-	/*
-	 
+	//Timbrado
+	doc.text(`Timbrado Nro: ${saleReturn.timbradoNumber}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`Timbrado Nro: ${saleReturn.timbradoNumber}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	ryPos += _lineHsmall;
 
+	//fecha de Inicio de Vigencia
+	doc.text(`Inicio de Vigencia: ${saleReturn.timbradoDate}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`Inicio de Vigencia: ${saleReturn.timbradoDate}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	ryPos += _lineHlarge;
+
+	//fecha de Inicio de Vigencia
+	doc.setFont(_fontFamily, _fontBold);
 	doc.setFontSize(_fontSmall);
+	doc.text(`NOTA DE CRÉDITO ELECTRÓNICA`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`NOTA DE CRÉDITO ELECTRÓNICA`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	ryPos += _lineHlarge;
 
-	//timbrado
-	doc.text(`Timbrado: ${saleReturn.timbradoNumber}`, xPosA + _logoWith + rucLeftSpace, yPos);
-	doc.text(`Timbrado: ${saleReturn.timbradoNumber}`, xPosB + _logoWith + rucLeftSpace, yPos);
+	//Invoice
+	doc.setFont(_fontFamily, _fontBold);
+	doc.setFontSize(_fontMedium);
+	doc.text(`${saleReturn.invoiceNumber}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`${saleReturn.invoiceNumber}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	ryPos += _lineHmediun;
 
+	//Nro Registro
+	doc.setFont(_fontFamily, _fontNormal);
 	doc.setFontSize(_fontSmall);
-*/
+	doc.text(`Nro Registro: ${saleReturn.saleReturnId}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`Nro Registro: ${saleReturn.saleReturnId}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+
 	const pdfDataUrl = doc.output("datauristring");
 
 	// Mostrar el PDF en el iframe
