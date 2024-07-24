@@ -10,8 +10,28 @@ interface SaleReturnModel {
 	companyRuc: string;
 	timbradoNumber: string;
 	timbradoDate: string;
-	invoiceNumber: string;
+	saleReturnInvoice: string;
 	saleReturnId: string;
+	saleReturnDate: string;
+	saleReturnHours: string;
+	saleReturnMoney: string;
+	saleReturnShop: string;
+	saleReturnBox: string;
+	saleReturnOperTypeName: string;
+	saleInvoiceNumber: string;
+	saleId: string;
+	saleCDC: string;
+	userName: string;
+	customerName: string;
+	customerFantasy: string;
+	customerRuc: string;
+	customerAddress: string;
+	customerPhone: string;
+	customerAccountName: string;
+	customerAccountNum: string;
+	customerEmail: string;
+	customerZone: string;
+	customerRoute: string;
 }
 
 const saleReturnModel: SaleReturnModel = {
@@ -26,8 +46,28 @@ const saleReturnModel: SaleReturnModel = {
 	companyRuc: "123456789012",
 	timbradoNumber: "1234567890",
 	timbradoDate: "01/01/2022",
-	invoiceNumber: "001-001-0701047",
-	saleReturnId: "1234567",
+	saleReturnInvoice: "001-001-0000700",
+	saleReturnId: "1321564",
+	saleReturnDate: "01/01/2022",
+	saleReturnHours: "12:00 PM",
+	saleReturnMoney: "GUARANI",
+	saleInvoiceNumber: "001-001-0701047",
+	saleCDC: "01800290011001003000589922024062512544458894",
+	saleId: "25326541",
+	saleReturnShop: "Comercial Sucursal 1",
+	saleReturnBox: "Caja 1 ferreteria",
+	saleReturnOperTypeName: "Devolución de Ventas",
+	userName: "Juan Perez",
+	customerName: "Jose Ignacio Silvero",
+	customerFantasy: "Importadora el Surco Grueso",
+	customerRuc: "8002531256-6",
+	customerAddress: "Av. Amelia Earhart 1234",
+	customerPhone: "(123) 456-7890",
+	customerAccountName: "Cta. Cte. Importadora El Surco Grueso",
+	customerAccountNum: "1234567890",
+	customerEmail: "importadora@example.com",
+	customerZone: "zona cental",
+	customerRoute: "Ruta cental 1 y 3",
 };
 
 function onGeneratePdfButtonClick(event: MouseEvent): void {
@@ -167,8 +207,8 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	//Invoice
 	doc.setFont(_fontFamily, _fontBold);
 	doc.setFontSize(_fontMedium);
-	doc.text(`${saleReturn.invoiceNumber}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
-	doc.text(`${saleReturn.invoiceNumber}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`${saleReturn.saleReturnInvoice}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
+	doc.text(`${saleReturn.saleReturnInvoice}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
 	ryPos += _lineHmediun;
 
 	//Nro Registro
@@ -177,10 +217,7 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	doc.text(`Nro Registro: ${saleReturn.saleReturnId}`, xPosA + _logoWith + rucLeftSpace, ryPos, { align: "center" });
 	doc.text(`Nro Registro: ${saleReturn.saleReturnId}`, xPosB + _logoWith + rucLeftSpace, ryPos, { align: "center" });
 
-	console.log(`xPosA:${xPosA}`);
-	console.log(`xPosB:${xPosB}`);
-	console.log(`rectWidth:${pageWidth - margin - rectMargin}`);
-
+	//line divide
 	doc.setLineWidth(0.2);
 	doc.line(xPosA, yPos, lineX - margin, yPos);
 	doc.line(xPosB, yPos, pageWidth - margin, yPos);
