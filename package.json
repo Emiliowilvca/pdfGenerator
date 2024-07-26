@@ -1,20 +1,21 @@
 {
-  "name": "pdfgenerator",
-  "version": "1.0.0",
-  "description": "pdf-generator",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@types/jspdf": "^2.0.0",
-    "jspdf": "^2.5.1",
-    "live-server": "^1.2.2"
-  },
-  "devDependencies": {
-    "typescript": "^5.5.4"
-  }
+	"name": "pdfgenerator",
+	"version": "1.0.0",
+	"description": "pdf-generator",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "webpack --config webpack.config.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@types/jspdf": "^2.0.0",
+		"jspdf": "^2.5.1",
+		"live-server": "^1.2.2"
+	},
+	"devDependencies": {
+		"typescript": "^5.5.4"
+	}
 }
