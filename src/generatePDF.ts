@@ -55,6 +55,9 @@ interface SaleReturnModel {
 	VATsettlementTotal: string;
 	VATsettlement5: string;
 	VATsettlement10: string;
+	CDC: string;
+	imageUrl1: string;
+	imageUrl2: string;
 	saleReturnDetails: saleReturnDetails[];
 }
 
@@ -101,6 +104,10 @@ const saleReturnModel: SaleReturnModel = {
 	VATsettlement10: "18.500",
 	VATsettlement5: "5.500",
 	VATsettlementTotal: "24.000",
+	CDC: "01800290011001003000589922024062512544458894",
+	imageUrl1: "",
+	imageUrl2:
+		"data:image/png;base64,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",
 
 	saleReturnDetails: [
 		{ code: "1234567890123", description: "Arroz parbolizado 5kg", quantity: "1", price: "15000", discount: "0.00", exenta: "0.00", iva5: "0.00", iva10: "13500" },
@@ -131,17 +138,73 @@ const saleReturnModel: SaleReturnModel = {
 	],
 };
 
-function onGeneratePdfButtonClick(event: MouseEvent): void {
-	generatePdf(saleReturnModel);
+async function onGeneratePdfButtonClick(event: MouseEvent): Promise<void> {
+	try {
+		await generatePdf(saleReturnModel);
+
+		console.log("PDF Generated successfully!");
+	} catch (error) {
+		console.log("Pdf Generado con exito" + error);
+	}
 }
 
-// Escuchar el evento "onload" del documento y agregar el evento de clic al botón
 window.onload = () => {
 	const generatePdfButton = document.getElementById("generatePDF") as HTMLButtonElement;
-	generatePdfButton.onclick = onGeneratePdfButtonClick;
+	if (generatePdfButton) {
+		generatePdfButton.onclick = onGeneratePdfButtonClick;
+	} else {
+		console.error("El botón generatePDF no se encontró");
+	}
 };
 
-function generatePdf(saleReturn: SaleReturnModel): void {
+const corsProxy = "https://api.allorigins.win/raw?url=";
+async function imageUrlToBase64(url: string): Promise<string> {
+	try {
+		// Realizar la solicitud para obtener la imagen
+		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error("Network response was not ok");
+		}
+
+		// Convertir la respuesta en un blob
+		const blob = await response.blob();
+
+		// Verificar el tipo de contenido
+		const contentType = response.headers.get("Content-Type") || "image/png"; // Default to image/png if not provided
+
+		// Convertir el blob a base64
+		return new Promise<string>((resolve, reject) => {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				const base64data = reader.result as string;
+				resolve(`data:${contentType};base64,${base64data.split(",")[1]}`); // Add content type to base64 string
+			};
+			reader.onerror = reject;
+			reader.readAsDataURL(blob);
+		});
+	} catch (error) {
+		console.error("Error converting image to base64:", error);
+		throw error;
+	}
+}
+
+async function imageUrlToBase64x(url: string): Promise<string> {
+	const corsProxy = "https://cors-anywhere.herokuapp.com/";
+	const response = await fetch(corsProxy + url);
+	const blob = await response.blob();
+
+	return new Promise<string>((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			const base64data = reader.result as string;
+			resolve(base64data);
+		};
+		reader.onerror = reject;
+		reader.readAsDataURL(blob);
+	});
+}
+
+async function generatePdf(saleReturn: SaleReturnModel): Promise<void> {
 	// Crear una instancia de jsPDF
 	const { jsPDF } = window.jspdf;
 
@@ -701,8 +764,77 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 
 	const qrImage = qr.toDataURL();
 
-	doc.addImage(qrImage, "PNG", xPosA, yPos, 70, 70);
-	doc.addImage(qrImage, "PNG", xPosB, yPos, 70, 70);
+	doc.addImage(qrImage, "PNG", xPosA + span1, yPos, 25, 25);
+	doc.addImage(qrImage, "PNG", xPosB + span1, yPos, 25, 25);
+
+	const urlPosx = 30;
+
+	yPos += _lineHlarge;
+
+	doc.text("Consulte la validez de esta Nota de Crédito Electrónica con el número de CDC impreso abajo en:", xPosA + urlPosx, yPos);
+	doc.text("Consulte la validez de esta Nota de Crédito Electrónica con el número de CDC impreso abajo en:", xPosB + urlPosx, yPos);
+
+	yPos += _lineHsmall;
+
+	doc.text("https://ekuatia.set.gov.py/consultas/", xPosA + urlPosx, yPos);
+	doc.text("https://ekuatia.set.gov.py/consultas/", xPosB + urlPosx, yPos);
+
+	yPos += _lineHlarge;
+
+	doc.setFont(_fontFamily, _fontBold);
+	doc.setFontSize(_fontMedium);
+	doc.text(`CDC: ${saleReturn.CDC}`, xPosA + urlPosx, yPos);
+	doc.text(`CDC: ${saleReturn.CDC}`, xPosB + urlPosx, yPos);
+
+	yPos += _lineHlarge;
+	doc.setFontSize(_fontSmall);
+
+	doc.text("ESTE DOCUMENTO ES UNA REPRESENTACIÓN GRÁFICA DE UN DOCUMENTO ELECTRÓNICO (XML)", xPosA + urlPosx, yPos);
+	doc.text("ESTE DOCUMENTO ES UNA REPRESENTACIÓN GRÁFICA DE UN DOCUMENTO ELECTRÓNICO (XML)", xPosB + urlPosx, yPos);
+
+	yPos += _lineHlarge;
+
+	doc.setFont(_fontFamily, _fontNormal);
+
+	doc.text("Si su documento electrónico presenta algún error, podrá solicitar la modificación dentro ", xPosA + urlPosx, yPos);
+	doc.text("Si su documento electrónico presenta algún error, podrá solicitar la modificación dentro", xPosB + urlPosx, yPos);
+
+	yPos += _lineHsmall;
+
+	doc.text("de las 72 horas siguientes de la emisión de este comprobante.", xPosA + urlPosx, yPos);
+	doc.text("de las 72 horas siguientes de la emisión de este comprobante.", xPosB + urlPosx, yPos);
+
+	yPos += 5;
+
+	//line divide
+	doc.setLineWidth(0.2);
+	doc.line(xPosA, yPos, lineX - margin, yPos);
+	doc.line(xPosB, yPos, pageWidth - margin, yPos);
+	yPos += 1.5;
+
+	const imgW = 18;
+	const imgH = 7;
+
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosA + span1, yPos, imgW, imgH);
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosB + span1, yPos, imgW, imgH);
+
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosA + span1 + 19, yPos, imgW, imgH);
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosB + span1 + 19, yPos, imgW, imgH);
+
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosA + span1 + 38, yPos, imgW, imgH);
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosB + span1 + 38, yPos, imgW, imgH);
+
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosA + span1 + 57, yPos, imgW, imgH);
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosB + span1 + 57, yPos, imgW, imgH);
+
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosA + span1 + 76, yPos, imgW, imgH);
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosB + span1 + 76, yPos, imgW, imgH);
+
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosA + span1 + 95, yPos, imgW, imgH);
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosB + span1 + 95, yPos, imgW, imgH);
+
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosA + span1 + 114, yPos, imgW, imgH);
+	doc.addImage(saleReturn.imageUrl2, "PNG", xPosB + span1 + 114, yPos, imgW, imgH);
 
 	const pdfDataUrl = doc.output("datauristring");
 
