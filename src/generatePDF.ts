@@ -1,3 +1,6 @@
+// import { jsPDF } from "jspdf";
+//import QRious from "qrious";
+
 interface saleReturnDetails {
 	code: string;
 	description: string;
@@ -141,6 +144,7 @@ window.onload = () => {
 function generatePdf(saleReturn: SaleReturnModel): void {
 	// Crear una instancia de jsPDF
 	const { jsPDF } = window.jspdf;
+
 	const doc = new jsPDF({
 		orientation: "l",
 		unit: "mm",
@@ -190,9 +194,10 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 
 	//vertical line
 	doc.setLineWidth(0.1);
-	doc.setLineDash([0.5, 0.3], 0);
+
+	doc.setLineDashPattern([0.5, 0.3], 0);
 	doc.line(lineX, 0, lineX, pageHeight);
-	doc.setLineDash([]);
+	doc.setLineDashPattern([], 0);
 
 	doc.setFont(_fontFamily);
 	doc.setFontSize(_fontLarge);
@@ -685,6 +690,19 @@ function generatePdf(saleReturn: SaleReturnModel): void {
 	doc.setLineWidth(0.2);
 	doc.line(xPosA, yPos, lineX - margin, yPos);
 	doc.line(xPosB, yPos, pageWidth - margin, yPos);
+	yPos += _lineHsmall;
+
+	const QRious = window.QRious;
+
+	const qr = new QRious({
+		value: "https://example.com",
+		size: 100,
+	});
+
+	const qrImage = qr.toDataURL();
+
+	doc.addImage(qrImage, "PNG", xPosA, yPos, 70, 70);
+	doc.addImage(qrImage, "PNG", xPosB, yPos, 70, 70);
 
 	const pdfDataUrl = doc.output("datauristring");
 

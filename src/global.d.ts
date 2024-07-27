@@ -1,8 +1,8 @@
 declare global {
-    interface Window {
-      jspdf: any;
-    }
-  }
-  
-  export {};
-  
+	interface Window {
+		jspdf: any;
+		QRious: any;
+	}
+}
+
+export {};
