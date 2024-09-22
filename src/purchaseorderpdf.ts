@@ -146,10 +146,11 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 		const _fontNormal = "normal";
 
 		const _lineHsmall = 2.7;
-		const _lineHmediun = 3;
+		const _lineHmedium = 4;
 		const _lineHlarge = 5;
 		let yPos = 10;
-		const xPos = margin;
+		const xPos = margin + 10;
+		let xposR = pageWidth - 60;
 
 		doc.setDrawColor(0, 0, 0);
 		doc.setFillColor(255, 255, 255);
@@ -161,18 +162,96 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 		doc.setFont(_fontFamily);
 		doc.setFontSize(_fontLarge);
 
-		// Título principal: ORDEN DE COMPRAS
-
+		// Título principal
 		let title = "ORDEN DE COMPRAS";
 		let titlewidth = doc.getTextWidth(title);
 		doc.text(title, (pageWidth - titlewidth) / 2, yPos);
 
 		yPos += _lineHlarge;
-		// subtitle center position
-		doc.setFontSize(_fontMedium);
-		doc.text("Número de Orden: #" + orderData.id, xPos, yPos + _lineHmediun);
 
+		// Company
+		doc.setFontSize(_fontMedium);
 		doc.text(orderData.companyName, xPos, yPos);
+
+		doc.text(`Fecha de Solicitud: ${orderData.orderDate}`, xposR, yPos);
+		yPos += _lineHmedium;
+
+		//address
+		doc.text(orderData.companyAddress, xPos, yPos);
+		doc.text(`Fecha de Entrega: ${orderData.deliveryDate}`, xposR, yPos);
+		yPos += _lineHmedium;
+
+		//city and country
+		doc.text(`${orderData.companyCity} - ${orderData.companyState} - ${orderData.companyCountry}`, xPos, yPos);
+		doc.text(`Nro de Pedido: ${orderData.id}`, xposR, yPos);
+		yPos += _lineHmedium;
+
+		//email
+		doc.text(orderData.companyEmail, xPos, yPos);
+		yPos += _lineHsmall;
+
+		//line
+		doc.setLineWidth(0.2);
+		doc.line(margin, yPos, pageWidth - margin, yPos);
+		yPos += _lineHmedium;
+
+		let span1 = margin + 75;
+		let span2 = margin + 120;
+
+		doc.setFont(_fontFamily, _fontBold);
+		doc.setFontSize(_fontMedium);
+		//Shop
+		doc.text(`PROVEEDOR`, xPos, yPos);
+		doc.text(`ENVIAR A`, xPos + span2, yPos);
+
+		yPos += _lineHmedium;
+
+		doc.setFont(_fontFamily, _fontNormal);
+		doc.text(`Proveedor: ${orderData.providerName}`, xPos, yPos);
+		doc.text(`Sucursal: ${orderData.shopName}`, xPos + span2, yPos);
+
+		yPos += _lineHmedium;
+
+		doc.text(`Contacto: ${orderData.providerContact}`, xPos, yPos);
+		doc.text(`Empleado: ${orderData.employeeName}`, xPos + span2, yPos);
+
+		yPos += _lineHmedium;
+
+		doc.text(`Correo : ${orderData.providerEmail}`, xPos, yPos);
+		doc.text(`Telefono: `, xPos + span2, yPos);
+
+		yPos += _lineHmedium;
+
+		doc.text(`Telefono: ${orderData.providerPhone}`, xPos, yPos);
+		doc.text(`Direccion: `, xPos + span2, yPos);
+
+		yPos += _lineHmedium;
+
+		doc.text(`Condicion de Pago: ${orderData.paymentCondition}`, xPos, yPos);
+		doc.text(`Email: `, xPos + span2, yPos);
+
+		yPos += _lineHsmall;
+
+		doc.setLineWidth(0.2);
+		doc.line(margin, yPos, pageWidth - margin, yPos);
+		yPos += _lineHmedium;
+
+		doc.setFont(_fontFamily, _fontBold);
+		doc.setFontSize(_fontMedium);
+		doc.text(`Condiciones de Envio`, xPos, yPos);
+
+		doc.setFont(_fontFamily, _fontNormal);
+
+		yPos += _lineHmedium;
+
+		doc.text(`Transportadora: ${orderData.carrierName}`, xPos, yPos);
+		doc.text(`Telefono: `, xPos + span1, yPos);
+		doc.text(`Conductor: `, xPos + span2, yPos);
+		yPos += _lineHsmall;
+
+		doc.setLineWidth(0.2);
+		doc.line(margin, yPos, pageWidth - margin, yPos);
+		yPos += _lineHmedium;
 
 		/*
 		================================================================
