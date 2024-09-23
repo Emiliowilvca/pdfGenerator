@@ -39,12 +39,12 @@ interface PurchaseOrderData {
 interface PurchaseOrderDataDetail {
 	code: string;
 	name: string;
-	quantity: number;
-	grossPrice: number;
-	discount: number;
-	netPrice: number;
-	discountPercent: number;
-	subTotal: number;
+	quantity: string;
+	grossPrice: string;
+	discount: string;
+	netPrice: string;
+	discountPercent: string;
+	subTotal: string;
 	remark: string;
 }
 
@@ -87,24 +87,24 @@ const purchaseOrderModel: PurchaseOrderData = {
 		{
 			code: "PROD-001",
 			name: "Laptop X100",
-			quantity: 10,
-			grossPrice: 500.0,
-			discount: 50.0,
-			netPrice: 450.0,
-			discountPercent: 10,
-			subTotal: 4500.0,
+			quantity: "10",
+			grossPrice: "500.0",
+			discount: "50.0",
+			netPrice: "450.0",
+			discountPercent: "10",
+			subTotal: "4500.0",
 			remark: "Special discount applied",
 		},
 		{
 			code: "PROD-002",
 			name: "Wireless Mouse Z200",
-			quantity: 20,
-			grossPrice: 25.0,
-			discount: 0,
-			netPrice: 25.0,
-			discountPercent: 0,
-			subTotal: 500.0,
-			remark: "",
+			quantity: "10",
+			grossPrice: "500.0",
+			discount: "50.0",
+			netPrice: "450.0",
+			discountPercent: "10",
+			subTotal: "4500.0",
+			remark: "Special discount applied",
 		},
 	],
 };
@@ -141,12 +141,12 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 		orderData.productItems.push({
 			code: `PROD-${i.toString()}`, // Código del producto
 			name: `Product ${i}`, // Nombre del producto
-			quantity: quantity, // Cantidad
-			grossPrice: grossPrice, // Precio bruto
-			discount: discount, // Descuento
-			netPrice: netPrice, // Precio neto
-			discountPercent: discount > 0 ? parseFloat(((discount / grossPrice) * 100).toFixed(2)) : 0, // Porcentaje de descuento
-			subTotal: subTotal, // Subtotal
+			quantity: quantity.toString(), // Cantidad
+			grossPrice: grossPrice.toString(), // Precio bruto
+			discount: discount.toString(), // Descuento
+			netPrice: netPrice.toString(), // Precio neto
+			discountPercent: `${discount > 0 ? parseFloat(((discount / grossPrice) * 100).toFixed(2)) : 0}`, // Porcentaje de descuento
+			subTotal: subTotal.toString(), // Subtotal
 			remark: discount > 0 ? "Special discount applied" : "", // Comentario
 		});
 	}
@@ -285,6 +285,7 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 			let dtSpam2 = 70;
 			let dtSpam3 = 100;
 			let dtSpam4 = 120;
+			let dtSpam5 = 140;
 
 			let linesOnCurrentPage = 0;
 
@@ -294,157 +295,10 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 				doc.text(item.code, xPos, yPos);
 				doc.text(item.name, xPos + dtSpam1, yPos);
 
-				doc.text(item.quantity.toString(), xPos + dtSpam2, yPos);
-
-				yPos += _lineHmedium;
-				linesOnCurrentPage++; // Incrementar el número de líneas en la página actual
-				currentIndex++; // Avanzar al siguiente ítem de la lista
-			}
-
-			yPos = pageHeight - 25; //
-
-			doc.setLineWidth(0.2);
-			doc.line(margin, yPos, pageWidth - margin, yPos);
-			yPos += _lineHmedium;
-
-			if (currentIndex < orderData.productItems.length) {
-				doc.text("continua", xPos, yPos);
-				console.log(`continua, -  vuelta${currentIndex}`);
-			} else {
-				doc.text("total en guaranies = 300.000", xPos + 100, yPos);
-				console.log(`total en guaranies  -  vuelta${currentIndex}`);
-			}
-
-			if (currentIndex < orderData.productItems.length) {
-				doc.addPage(); // esto debe ir al ultimo
-			}
-		}
-
-		let maxLinesPerPage = 50; // Calcular cuántas líneas caben por página
-		let currentIndex = 0;
-
-		let totalLines = orderData.productItems.length; //
-
-		while (currentIndex < totalLines) {
-			let yPos = 10;
-			const xPos = margin + 10;
-			let xposR = pageWidth - 60;
-
-			doc.setDrawColor(0, 0, 0);
-			doc.setFillColor(255, 255, 255);
-			doc.setLineWidth(0.2);
-
-			// Rectángulo a la izquierda (x, y, width, height, cornerX, cornerY)
-			doc.roundedRect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin, 2, 2);
-
-			doc.setFont(_fontFamily);
-			doc.setFontSize(_fontLarge);
-
-			// Título principal
-			let title = "ORDEN DE COMPRAS";
-			let titlewidth = doc.getTextWidth(title);
-			doc.text(title, (pageWidth - titlewidth) / 2, yPos);
-
-			yPos += _lineHlarge;
-
-			// Company
-			doc.setFontSize(_fontMedium);
-			doc.text(orderData.companyName, xPos, yPos);
-
-			doc.text(`Fecha de Solicitud: ${orderData.orderDate}`, xposR, yPos);
-			yPos += _lineHmedium;
-
-			//address
-			doc.text(orderData.companyAddress, xPos, yPos);
-			doc.text(`Fecha de Entrega: ${orderData.deliveryDate}`, xposR, yPos);
-			yPos += _lineHmedium;
-
-			//city and country
-			doc.text(`${orderData.companyCity} - ${orderData.companyState} - ${orderData.companyCountry}`, xPos, yPos);
-			doc.text(`Nro de Pedido: ${orderData.id}`, xposR, yPos);
-			yPos += _lineHmedium;
-
-			//email
-			doc.text(orderData.companyEmail, xPos, yPos);
-			yPos += _lineHsmall;
-
-			//line
-			doc.setLineWidth(0.2);
-			doc.line(margin, yPos, pageWidth - margin, yPos);
-			yPos += _lineHmedium;
-
-			let span1 = margin + 75;
-			let span2 = margin + 120;
-
-			doc.setFont(_fontFamily, _fontBold);
-			doc.setFontSize(_fontMedium);
-			//Shop
-			doc.text(`PROVEEDOR`, xPos, yPos);
-			doc.text(`ENVIAR A`, xPos + span2, yPos);
-
-			yPos += _lineHmedium;
-
-			doc.setFont(_fontFamily, _fontNormal);
-			doc.text(`Proveedor: ${orderData.providerName}`, xPos, yPos);
-			doc.text(`Sucursal: ${orderData.shopName}`, xPos + span2, yPos);
-
-			yPos += _lineHmedium;
-
-			doc.text(`Contacto: ${orderData.providerContact}`, xPos, yPos);
-			doc.text(`Empleado: ${orderData.employeeName}`, xPos + span2, yPos);
-
-			yPos += _lineHmedium;
-
-			doc.text(`Correo : ${orderData.providerEmail}`, xPos, yPos);
-			doc.text(`Telefono: `, xPos + span2, yPos);
-
-			yPos += _lineHmedium;
-
-			doc.text(`Telefono: ${orderData.providerPhone}`, xPos, yPos);
-			doc.text(`Direccion: `, xPos + span2, yPos);
-
-			yPos += _lineHmedium;
-
-			doc.text(`Condicion de Pago: ${orderData.paymentCondition}`, xPos, yPos);
-			doc.text(`Email: `, xPos + span2, yPos);
-
-			yPos += _lineHsmall;
-
-			doc.setLineWidth(0.2);
-			doc.line(margin, yPos, pageWidth - margin, yPos);
-			yPos += _lineHmedium;
-
-			doc.setFont(_fontFamily, _fontBold);
-			doc.setFontSize(_fontMedium);
-			doc.text(`Condiciones de Envio`, xPos, yPos);
-
-			doc.setFont(_fontFamily, _fontNormal);
-
-			yPos += _lineHmedium;
-
-			doc.text(`Transportadora: ${orderData.carrierName}`, xPos, yPos);
-			doc.text(`Telefono: `, xPos + span1, yPos);
-			doc.text(`Conductor: `, xPos + span2, yPos);
-			yPos += _lineHsmall;
-
-			doc.setLineWidth(0.2);
-			doc.line(margin, yPos, pageWidth - margin, yPos);
-			yPos += _lineHmedium;
-
-			let dtSpam1 = 50;
-			let dtSpam2 = 70;
-			let dtSpam3 = 100;
-			let dtSpam4 = 120;
-
-			let linesOnCurrentPage = 0;
-
-			while (linesOnCurrentPage < maxLinesPerPage && currentIndex < orderData.productItems.length) {
-				const item = orderData.productItems[currentIndex];
-				doc.setFontSize(10); // Tamaño de fuente para los datos
-				doc.text(item.code, xPos, yPos);
-				doc.text(item.name, xPos + dtSpam1, yPos);
-
-				doc.text(item.quantity.toString(), xPos + dtSpam2, yPos);
+				doc.text(item.quantity, xPos + dtSpam2, yPos);
+				doc.text(item.netPrice, xPos + dtSpam3, yPos);
+				doc.text(item.subTotal, xPos + dtSpam4, yPos);
+				doc.text(item.remark, xPos + dtSpam5, yPos);
 
 				yPos += _lineHmedium;
 				linesOnCurrentPage++; // Incrementar el número de líneas en la página actual
