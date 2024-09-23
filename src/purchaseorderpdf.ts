@@ -130,6 +130,27 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 		format: "a4",
 		putOnlyUsedFonts: true,
 	});
+
+	for (let i = 1; i <= 200; i++) {
+		const quantity = Math.floor(Math.random() * 20) + 1; // Cantidad entre 1 y 20
+		const grossPrice = parseFloat((Math.random() * 100).toFixed(2)); // Precio bruto aleatorio
+		const discount = Math.random() < 0.5 ? parseFloat(((Math.random() * grossPrice) / 2).toFixed(2)) : 0; // Descuento aleatorio
+		const netPrice = parseFloat((grossPrice - discount).toFixed(2)); // Precio neto
+		const subTotal = parseFloat((netPrice * quantity).toFixed(2)); // Subtotal
+
+		orderData.productItems.push({
+			code: `PROD-${i.toString()}`, // Código del producto
+			name: `Product ${i}`, // Nombre del producto
+			quantity: quantity, // Cantidad
+			grossPrice: grossPrice, // Precio bruto
+			discount: discount, // Descuento
+			netPrice: netPrice, // Precio neto
+			discountPercent: discount > 0 ? parseFloat(((discount / grossPrice) * 100).toFixed(2)) : 0, // Porcentaje de descuento
+			subTotal: subTotal, // Subtotal
+			remark: discount > 0 ? "Special discount applied" : "", // Comentario
+		});
+	}
+
 	try {
 		// Obtener las dimensiones de la página A4 en milímetros
 		const pageWidth = doc.internal.pageSize.getWidth();
@@ -148,110 +169,156 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 		const _lineHsmall = 2.7;
 		const _lineHmedium = 4;
 		const _lineHlarge = 5;
-		let yPos = 10;
-		const xPos = margin + 10;
-		let xposR = pageWidth - 60;
 
-		doc.setDrawColor(0, 0, 0);
-		doc.setFillColor(255, 255, 255);
-		doc.setLineWidth(0.2);
+		let maxLinesPerPage = 50; // Calcular cuántas líneas caben por página
+		let currentIndex = 0;
 
-		// Rectángulo a la izquierda (x, y, width, height, cornerX, cornerY)
-		doc.roundedRect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin, 2, 2);
+		let totalLines = orderData.productItems.length; //
 
-		doc.setFont(_fontFamily);
-		doc.setFontSize(_fontLarge);
+		while (currentIndex < totalLines) {
+			let yPos = 10;
+			const xPos = margin + 10;
+			let xposR = pageWidth - 60;
 
-		// Título principal
-		let title = "ORDEN DE COMPRAS";
-		let titlewidth = doc.getTextWidth(title);
-		doc.text(title, (pageWidth - titlewidth) / 2, yPos);
+			doc.setDrawColor(0, 0, 0);
+			doc.setFillColor(255, 255, 255);
+			doc.setLineWidth(0.2);
 
-		yPos += _lineHlarge;
+			// Rectángulo a la izquierda (x, y, width, height, cornerX, cornerY)
+			doc.roundedRect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin, 2, 2);
 
-		// Company
-		doc.setFontSize(_fontMedium);
-		doc.text(orderData.companyName, xPos, yPos);
+			doc.setFont(_fontFamily);
+			doc.setFontSize(_fontLarge);
 
-		doc.text(`Fecha de Solicitud: ${orderData.orderDate}`, xposR, yPos);
-		yPos += _lineHmedium;
+			// Título principal
+			let title = "ORDEN DE COMPRAS";
+			let titlewidth = doc.getTextWidth(title);
+			doc.text(title, (pageWidth - titlewidth) / 2, yPos);
 
-		//address
-		doc.text(orderData.companyAddress, xPos, yPos);
-		doc.text(`Fecha de Entrega: ${orderData.deliveryDate}`, xposR, yPos);
-		yPos += _lineHmedium;
+			yPos += _lineHlarge;
 
-		//city and country
-		doc.text(`${orderData.companyCity} - ${orderData.companyState} - ${orderData.companyCountry}`, xPos, yPos);
-		doc.text(`Nro de Pedido: ${orderData.id}`, xposR, yPos);
-		yPos += _lineHmedium;
+			// Company
+			doc.setFontSize(_fontMedium);
+			doc.text(orderData.companyName, xPos, yPos);
 
-		//email
-		doc.text(orderData.companyEmail, xPos, yPos);
-		yPos += _lineHsmall;
+			doc.text(`Fecha de Solicitud: ${orderData.orderDate}`, xposR, yPos);
+			yPos += _lineHmedium;
 
-		//line
-		doc.setLineWidth(0.2);
-		doc.line(margin, yPos, pageWidth - margin, yPos);
-		yPos += _lineHmedium;
+			//address
+			doc.text(orderData.companyAddress, xPos, yPos);
+			doc.text(`Fecha de Entrega: ${orderData.deliveryDate}`, xposR, yPos);
+			yPos += _lineHmedium;
 
-		let span1 = margin + 75;
-		let span2 = margin + 120;
+			//city and country
+			doc.text(`${orderData.companyCity} - ${orderData.companyState} - ${orderData.companyCountry}`, xPos, yPos);
+			doc.text(`Nro de Pedido: ${orderData.id}`, xposR, yPos);
+			yPos += _lineHmedium;
 
-		doc.setFont(_fontFamily, _fontBold);
-		doc.setFontSize(_fontMedium);
-		//Shop
-		doc.text(`PROVEEDOR`, xPos, yPos);
-		doc.text(`ENVIAR A`, xPos + span2, yPos);
+			//email
+			doc.text(orderData.companyEmail, xPos, yPos);
+			yPos += _lineHsmall;
 
-		yPos += _lineHmedium;
+			//line
+			doc.setLineWidth(0.2);
+			doc.line(margin, yPos, pageWidth - margin, yPos);
+			yPos += _lineHmedium;
 
-		doc.setFont(_fontFamily, _fontNormal);
-		doc.text(`Proveedor: ${orderData.providerName}`, xPos, yPos);
-		doc.text(`Sucursal: ${orderData.shopName}`, xPos + span2, yPos);
+			let span1 = margin + 75;
+			let span2 = margin + 120;
 
-		yPos += _lineHmedium;
+			doc.setFont(_fontFamily, _fontBold);
+			doc.setFontSize(_fontMedium);
+			//Shop
+			doc.text(`PROVEEDOR`, xPos, yPos);
+			doc.text(`ENVIAR A`, xPos + span2, yPos);
 
-		doc.text(`Contacto: ${orderData.providerContact}`, xPos, yPos);
-		doc.text(`Empleado: ${orderData.employeeName}`, xPos + span2, yPos);
+			yPos += _lineHmedium;
 
-		yPos += _lineHmedium;
+			doc.setFont(_fontFamily, _fontNormal);
+			doc.text(`Proveedor: ${orderData.providerName}`, xPos, yPos);
+			doc.text(`Sucursal: ${orderData.shopName}`, xPos + span2, yPos);
 
-		doc.text(`Correo : ${orderData.providerEmail}`, xPos, yPos);
-		doc.text(`Telefono: `, xPos + span2, yPos);
+			yPos += _lineHmedium;
 
-		yPos += _lineHmedium;
+			doc.text(`Contacto: ${orderData.providerContact}`, xPos, yPos);
+			doc.text(`Empleado: ${orderData.employeeName}`, xPos + span2, yPos);
 
-		doc.text(`Telefono: ${orderData.providerPhone}`, xPos, yPos);
-		doc.text(`Direccion: `, xPos + span2, yPos);
+			yPos += _lineHmedium;
 
-		yPos += _lineHmedium;
+			doc.text(`Correo : ${orderData.providerEmail}`, xPos, yPos);
+			doc.text(`Telefono: `, xPos + span2, yPos);
 
-		doc.text(`Condicion de Pago: ${orderData.paymentCondition}`, xPos, yPos);
-		doc.text(`Email: `, xPos + span2, yPos);
+			yPos += _lineHmedium;
 
-		yPos += _lineHsmall;
+			doc.text(`Telefono: ${orderData.providerPhone}`, xPos, yPos);
+			doc.text(`Direccion: `, xPos + span2, yPos);
 
-		doc.setLineWidth(0.2);
-		doc.line(margin, yPos, pageWidth - margin, yPos);
-		yPos += _lineHmedium;
+			yPos += _lineHmedium;
 
-		doc.setFont(_fontFamily, _fontBold);
-		doc.setFontSize(_fontMedium);
-		doc.text(`Condiciones de Envio`, xPos, yPos);
+			doc.text(`Condicion de Pago: ${orderData.paymentCondition}`, xPos, yPos);
+			doc.text(`Email: `, xPos + span2, yPos);
 
-		doc.setFont(_fontFamily, _fontNormal);
+			yPos += _lineHsmall;
 
-		yPos += _lineHmedium;
+			doc.setLineWidth(0.2);
+			doc.line(margin, yPos, pageWidth - margin, yPos);
+			yPos += _lineHmedium;
 
-		doc.text(`Transportadora: ${orderData.carrierName}`, xPos, yPos);
-		doc.text(`Telefono: `, xPos + span1, yPos);
-		doc.text(`Conductor: `, xPos + span2, yPos);
-		yPos += _lineHsmall;
+			doc.setFont(_fontFamily, _fontBold);
+			doc.setFontSize(_fontMedium);
+			doc.text(`Condiciones de Envio`, xPos, yPos);
 
-		doc.setLineWidth(0.2);
-		doc.line(margin, yPos, pageWidth - margin, yPos);
-		yPos += _lineHmedium;
+			doc.setFont(_fontFamily, _fontNormal);
+
+			yPos += _lineHmedium;
+
+			doc.text(`Transportadora: ${orderData.carrierName}`, xPos, yPos);
+			doc.text(`Telefono: `, xPos + span1, yPos);
+			doc.text(`Conductor: `, xPos + span2, yPos);
+			yPos += _lineHsmall;
+
+			doc.setLineWidth(0.2);
+			doc.line(margin, yPos, pageWidth - margin, yPos);
+			yPos += _lineHmedium;
+
+			let dtSpam1 = 50;
+			let dtSpam2 = 70;
+			let dtSpam3 = 100;
+			let dtSpam4 = 120;
+
+			let linesOnCurrentPage = 0;
+
+			while (linesOnCurrentPage < maxLinesPerPage && currentIndex < orderData.productItems.length) {
+				const item = orderData.productItems[currentIndex];
+				doc.setFontSize(10); // Tamaño de fuente para los datos
+				doc.text(item.code, xPos, yPos);
+				doc.text(item.name, xPos + dtSpam1, yPos);
+
+				doc.text(item.quantity.toString(), xPos + dtSpam2, yPos);
+
+				yPos += _lineHmedium;
+				linesOnCurrentPage++; // Incrementar el número de líneas en la página actual
+				currentIndex++; // Avanzar al siguiente ítem de la lista
+			}
+
+			yPos = pageHeight - 25; //
+
+			doc.setLineWidth(0.2);
+			doc.line(margin, yPos, pageWidth - margin, yPos);
+			yPos += _lineHmedium;
+
+			if (currentIndex < orderData.productItems.length) {
+				doc.text("continua", xPos, yPos);
+				console.log(`continua, -  vuelta${currentIndex}`);
+			} else {
+				doc.text("total en guaranies = 300.000", xPos + 100, yPos);
+				console.log(`total en guaranies  -  vuelta${currentIndex}`);
+			}
+
+			if (currentIndex < orderData.productItems.length) {
+				doc.addPage(); // esto debe ir al ultimo
+			}
+		}
 
 		/*
 		================================================================
