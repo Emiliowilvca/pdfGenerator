@@ -277,15 +277,28 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 			doc.text(`Conductor: `, xPos + span2, yPos);
 			yPos += _lineHsmall;
 
-			doc.setLineWidth(0.2);
-			doc.line(margin, yPos, pageWidth - margin, yPos);
-			yPos += _lineHmedium;
-
 			let dtSpam1 = 50;
 			let dtSpam2 = 70;
 			let dtSpam3 = 100;
 			let dtSpam4 = 120;
 			let dtSpam5 = 140;
+
+			doc.setLineWidth(0.2);
+			doc.line(margin, yPos, pageWidth - margin, yPos);
+			yPos += _lineHmedium;
+
+			doc.text("codigo", xPos, yPos);
+			doc.text("Descripcion", xPos + dtSpam1, yPos);
+			doc.text("Cantidad", xPos + dtSpam2, yPos);
+			doc.text("Precio", xPos + dtSpam3, yPos);
+			doc.text("Subtotal", xPos + dtSpam4, yPos);
+			doc.text("Observacion", xPos + dtSpam5, yPos);
+
+			yPos += _lineHsmall;
+
+			doc.setLineWidth(0.2);
+			doc.line(margin, yPos, pageWidth - margin, yPos);
+			yPos += _lineHmedium;
 
 			let linesOnCurrentPage = 0;
 
