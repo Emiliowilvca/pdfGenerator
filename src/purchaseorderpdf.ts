@@ -31,7 +31,7 @@ interface PurchaseOrderData {
 	companyEcoActivityName: string;
 	companyRuc: string;
 	companyStampingNumber: string;
-	total: number;
+	total: string;
 	decimalPlaces: number;
 	productItems: PurchaseOrderDataDetail[];
 }
@@ -81,7 +81,7 @@ const purchaseOrderModel: PurchaseOrderData = {
 	companyEcoActivityName: "Technology Distribution",
 	companyRuc: "9876543210987",
 	companyStampingNumber: "T123456789",
-	total: 4500.75,
+	total: "4500.75",
 	decimalPlaces: 2,
 	productItems: [
 		{
@@ -318,18 +318,16 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 				currentIndex++; // Avanzar al siguiente ítem de la lista
 			}
 
-			yPos = pageHeight - 25; //
+			yPos = pageHeight - 20;
 			doc.setFontSize(_fontMedium);
 			doc.setLineWidth(0.2);
 			doc.line(margin, yPos, pageWidth - margin, yPos);
-			yPos += _lineHmedium;
+			yPos += _lineHlarge;
 
 			if (currentIndex < orderData.productItems.length) {
-				doc.text("continua", xPos, yPos);
-				console.log(`continua, -  vuelta${currentIndex}`);
+				doc.text("continua", pageWidth - 10, yPos, { align: "right" });
 			} else {
-				doc.text("total en guaranies = 300.000", xPos + 100, yPos);
-				console.log(`total en guaranies  -  vuelta${currentIndex}`);
+				doc.text(`total en ${orderData.moneyName}: ${orderData.total} `, pageWidth - 10, yPos, { align: "right" });
 			}
 
 			if (currentIndex < orderData.productItems.length) {
