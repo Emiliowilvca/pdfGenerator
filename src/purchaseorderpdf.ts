@@ -173,11 +173,11 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 		let maxLinesPerPage = 50; // Calcular cuántas líneas caben por página
 		let currentIndex = 0;
 
-		let totalLines = orderData.productItems.length; //
+		let totalLines = orderData.productItems.length;
 
 		while (currentIndex < totalLines) {
 			let yPos = 10;
-			const xPos = margin + 10;
+			const xPos = margin + 5;
 			let xposR = pageWidth - 60;
 
 			doc.setDrawColor(0, 0, 0);
@@ -277,21 +277,21 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 			doc.text(`Conductor: `, xPos + span2, yPos);
 			yPos += _lineHsmall;
 
-			let dtSpam1 = 50;
-			let dtSpam2 = 70;
-			let dtSpam3 = 100;
-			let dtSpam4 = 120;
-			let dtSpam5 = 140;
+			let dtSpam1 = 35;
+			let dtSpam2 = 110;
+			let dtSpam3 = 130;
+			let dtSpam4 = 150;
+			let dtSpam5 = 155;
 
 			doc.setLineWidth(0.2);
 			doc.line(margin, yPos, pageWidth - margin, yPos);
 			yPos += _lineHmedium;
 
-			doc.text("codigo", xPos, yPos);
+			doc.text("Codigo", xPos, yPos);
 			doc.text("Descripcion", xPos + dtSpam1, yPos);
-			doc.text("Cantidad", xPos + dtSpam2, yPos);
-			doc.text("Precio", xPos + dtSpam3, yPos);
-			doc.text("Subtotal", xPos + dtSpam4, yPos);
+			doc.text("Cantidad", xPos + dtSpam2, yPos, { align: "right" });
+			doc.text("Precio", xPos + dtSpam3, yPos, { align: "right" });
+			doc.text("Subtotal", xPos + dtSpam4, yPos, { align: "right" });
 			doc.text("Observacion", xPos + dtSpam5, yPos);
 
 			yPos += _lineHsmall;
@@ -304,13 +304,13 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 
 			while (linesOnCurrentPage < maxLinesPerPage && currentIndex < orderData.productItems.length) {
 				const item = orderData.productItems[currentIndex];
-				doc.setFontSize(10); // Tamaño de fuente para los datos
+
 				doc.text(item.code, xPos, yPos);
 				doc.text(item.name, xPos + dtSpam1, yPos);
 
-				doc.text(item.quantity, xPos + dtSpam2, yPos);
-				doc.text(item.netPrice, xPos + dtSpam3, yPos);
-				doc.text(item.subTotal, xPos + dtSpam4, yPos);
+				doc.text(item.quantity, xPos + dtSpam2, yPos, { align: "right" });
+				doc.text(item.netPrice, xPos + dtSpam3, yPos, { align: "right" });
+				doc.text(item.subTotal, xPos + dtSpam4, yPos, { align: "right" });
 				doc.text(item.remark, xPos + dtSpam5, yPos);
 
 				yPos += _lineHmedium;
@@ -319,7 +319,7 @@ async function generatePurchaseOrderPdf(orderData: PurchaseOrderData): Promise<v
 			}
 
 			yPos = pageHeight - 25; //
-
+			doc.setFontSize(_fontMedium);
 			doc.setLineWidth(0.2);
 			doc.line(margin, yPos, pageWidth - margin, yPos);
 			yPos += _lineHmedium;
